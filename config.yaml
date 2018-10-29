@@ -1,0 +1,17 @@
+---
+# Specify the granularity at which data is read from cloudwatch
+Period: 300
+# Type of Monitoring - Basic | Enhanced
+MonitoringType: "Basic"
+ # Port to run prometheus on
+PrometheusPort: 2001
+
+DBInstances:
+    # List of DB instances to monitor
+  - DBInstanceIdentifier: ""    # Unique identifier for the database
+    Region: ""              # Default is us-east-1, override it if you have db in other region
+    # If using in an EC2 instance, attach an IAM role instead
+    AWSAccessKey: ""        # AWS Access key
+    AWSSecretKey: ""        # AWS Secret access key
+    DBEngine: ""            # Each DB has different metrics, So specify correct engine to get granular metrics
+    # aurora | maria | postgres
