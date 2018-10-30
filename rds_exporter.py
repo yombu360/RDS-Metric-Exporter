@@ -1,4 +1,7 @@
+#!/usr/bin/python3.6
 import time
+import sys
+import argparse
 
 from prometheus_client import start_http_server
 
@@ -6,12 +9,20 @@ from Util.ConfigParser import ConfigParser
 from Metrics import Metrics
 from Logger.Logger import Logger
 
+parser = argparse.ArgumentParser()
 
-config = ConfigParser("config.yaml").parse_config_file()
+parser.add_argument("--config", help="config.yaml path", action="store")
+args = parser.parse_args()
+
+config = ConfigParser(args.config).parse_config_file()
 Logger.publish_log_info("Started RDS Metric Exporter on port: {}".format(config.get("PrometheusPort")))
 
-period = config.get("Period")
-port   = config.get("PrometheusPort")
+try:
+    period = int(config.get("Period"))
+    port   = int(config.get("PrometheusPort"))
+except ValueError:
+    Logger.publish_log_error("Period or port are not integer values in the config file")
+    sys.exit(1)
 
 start_http_server(port)
 

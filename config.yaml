@@ -1,26 +1,12 @@
 ---
-# Specify the granularity at which data is read from cloudwatch
 Period: 60
-# Type of Monitoring - Basic | Enhanced
 MonitoringType: "Basic"
- # Port to run prometheus on
 PrometheusPort: 2001
-
 DBInstances:
-    # List of DB instances to monitor
-  - DBInstanceIdentifier: "dev-applayer-mariadb"    # Unique identifier for the database
-    Region: "us-east-1"              # Default is us-east-1, override it if you have db in other region
-    # If using in an EC2 instance, attach an IAM role instead
-    AWSAccessKey: ""        # AWS Access key
-    AWSSecretKey: ""        # AWS Secret access key
-    DBEngine: "maria"            # Each DB has different metrics, So specify correct engine to get granular metrics
-    # aurora | maria
-    AvailabilityZone: "us-east-1a"  # Availability zone of the DB instance
-  - DBInstanceIdentifier: "dev-match-auroradb"    # Unique identifier for the database
-    Region: "us-east-1"              # Default is us-east-1, override it if you have db in other region
-      # If using in an EC2 instance, attach an IAM role instead
-    AWSAccessKey: ""        # AWS Access key
-    AWSSecretKey: ""        # AWS Secret access key
-    DBEngine: "aurora"            # Each DB has different metrics, So specify correct engine to get granular metrics
-      # aurora | maria
-    AvailabilityZone: "us-east-1b"  # Availability zone of the DB instance
+
+  - DBInstanceIdentifier: ""
+    Region: "us-east-1"
+    AWSAccessKey: ""
+    AWSSecretKey: ""
+    DBEngine: "maria"
+    AvailabilityZone: "us-east-1a"

@@ -1,0 +1,14 @@
+[Unit]
+Description=Alertmanager
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=venkata
+Group=venkata
+Type=simple
+WorkingDirectory=/etc/RDSExporter/
+ExecStart=/usr/local/bin/rds_exporter --config=/etc/RDSExporter/config.yaml
+
+[Install]
+WantedBy=multi-user.target
