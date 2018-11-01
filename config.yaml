@@ -4,9 +4,9 @@ MonitoringType: "Basic"
 PrometheusPort: 2001
 DBInstances:
 
-  - DBInstanceIdentifier: ""
+  - DBInstanceIdentifier: "dev-applayer-mariadb"
     Region: "us-east-1"
     AWSAccessKey: ""
     AWSSecretKey: ""
     DBEngine: "maria"
-    AvailabilityZone: "us-east-1a"
+    AvailabilityZone: "us-east-1b"

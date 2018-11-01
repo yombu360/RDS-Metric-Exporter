@@ -42,6 +42,7 @@ class Metrics:
             "Queries"                       : Gauge("rds_exporter_aurora_queries_per_second", "The average number of queries executed per second", LABELS),
             "Deadlocks"                     : Gauge("rds_exporter_aurora_deadlock_per_second", "The average number of deadlocks in the database per second", LABELS),
             "DeleteLatency"                 : Gauge("rds_exporter_aurora_delete_latency_milliseconds", "The amount of latency for delete queries", LABELS),
+            "DeleteThroughput"              : Gauge("rds_exporter_aurora_delete_throughput_per_second", "The average number of delete queries per second", LABELS),
             "DMLThroughput"                 : Gauge("rds_exporter_aurora_dml_throughput_per_second", "The average number of inserts, updates, and deletes per second", LABELS),
             "CommitLatency"                 : Gauge("rds_exporter_aurora_commit_latency_milliseconds", "The amount of latency for commit queries", LABELS),
             "CommitThroughput"              : Gauge("rds_exporter_aurora_commit_throughput_per_second", "The average number of commit queries per second", LABELS),
@@ -54,7 +55,6 @@ class Metrics:
             "EngineUptime"                  : Gauge("rds_exporter_aurora_engine_uptime_seconds", "The amount of time that the instance has been running", LABELS),
             "CPUUtilization"                : Gauge("rds_exporter_aurora_cpu_utilization_percent", "The percentage of CPU utilization", LABELS),
             "DMLLatency"                    : Gauge("rds_exporter_aurora_dml_latency_milliseconds", "The amount of latency for data manipulation language (DDL) requests", LABELS),
-            "DeleteThroughput"              : Gauge("rds_exporter_aurora_delete_throughput_per_second", "The average number of delete queries per second", LABELS),
             "DatabaseConnections"           : Gauge("rds_exporter_aurora_database_connections_count", "The number of database connections in use", LABELS),
             "FreeableMemory"                : Gauge("rds_exporter_aurora_freeable_memory_bytes", "Available RAM", LABELS),
             "DDLThroughput"                 : Gauge("rds_exporter_aurora_ddl_throughput_per_second", "The average number of inserts, updates, and deletes per second", LABELS),
@@ -112,7 +112,7 @@ class Metrics:
 
             for metric in db_metrics_dict.keys():
                 metric_data_query_dict = {
-                    "Id": metric.lower(),
+                    "Id": "{}_{}".format(self.db_name.replace("-", "").lower(), metric.lower()),
                     "MetricStat": {
                         "Metric": {
                             "Namespace": self.NAMESPACE,
@@ -136,8 +136,8 @@ class Metrics:
 
             response = self.cloudwatch_client.get_metric_data(
                 MetricDataQueries=metric_data_queries,
-                StartTime=datetime.utcnow() - timedelta(minutes=int(self.period/60)),
-                EndTime=datetime.utcnow(),
+                StartTime=datetime.utcnow() - timedelta(minutes=int(self.period/60)+3),
+                EndTime=datetime.utcnow() - timedelta(minutes=int(self.period/60)),
                 ScanBy='TimestampDescending'
             )
             return response
