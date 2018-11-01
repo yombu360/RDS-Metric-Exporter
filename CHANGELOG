@@ -1,0 +1,3 @@
+## V1: Inital release of RDS Exporter
+ - Supported databases: postgres and aurora
+ - Currently supportts only basic monitoring
