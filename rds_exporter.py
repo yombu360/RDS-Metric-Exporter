@@ -24,14 +24,16 @@ except ValueError:
     Logger.publish_log_error("Period or port are not integer values in the config file")
     sys.exit(1)
 
+access_key             = config.get("AWSAccessKey")
+secret_access_key      = config.get("AWSSecretKey")
+monitoring_type        = config.get("MonitoringType").lower()
+
 start_http_server(port)
 
 while True:
     for db_instance_data in config.get("DBInstances"):
         db_instance_identifier = db_instance_data.get("DBInstanceIdentifier")
         region                 = "us-east-1" if db_instance_data.get("Region") is None or len(db_instance_data.get("Region")) == 0 else db_instance_data.get("Region")
-        access_key             = db_instance_data.get("AWSAccessKey")
-        secret_access_key      = db_instance_data.get("AWSSecretKey")
         db_engine              = db_instance_data.get("DBEngine")
         availability_zone      = db_instance_data.get("AvailabilityZone")
 
@@ -41,11 +43,12 @@ while True:
                                    availability_zone=availability_zone,
                                    region=region,
                                    access_key=access_key,
-                                   secret_access_key=secret_access_key)
+                                   secret_access_key=secret_access_key,
+                                   monitoring_type=monitoring_type)
 
         db_metrics = db_metric_object.get_metrics_from_cloud_watch()
 
-        METRICS = db_metric_object.METRICS.get(db_engine)
+        METRICS = db_metric_object.METRICS.get(monitoring_type).get(db_engine)
         LABELS  = db_metric_object.LABELS
 
         for metric_result in db_metrics.get("MetricDataResults"):
